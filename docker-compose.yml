@@ -5,11 +5,13 @@ services:
     image: node:20-alpine
     ports:
       - "3000:3000"
+      - "5173:5173"
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
+      - node_modules_payload:/home/node/app/app/payload/node_modules
     working_dir: /home/node/app/
-    command: sh -c "npm install && npm run dev -w payload"
+    command: sh -c "npm install && npm run dev -w payload && npm run dev -w svelte"
     depends_on:
       - mongo
     env_file:
@@ -34,3 +36,4 @@ services:
 volumes:
   data:
   node_modules:
+  node_modules_payload:
