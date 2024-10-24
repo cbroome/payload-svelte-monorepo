@@ -10,10 +10,14 @@
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "app/payload",
-    "app/svelte"
+    "apps/payload",
+    "apps/svelte",
+    "apps/keystone"
   ],
   "devDependencies": {
     "concurrently": "^9.0.0"
+  },
+  "dependencies": {
+    "pm2": "^5.4.2"
   }
 }

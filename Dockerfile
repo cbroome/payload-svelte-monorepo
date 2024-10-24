@@ -1,39 +1,39 @@
 FROM node:22-alpine as base
 
+RUN npm install -g pm2
+
+
 FROM base as builder
 
-WORKDIR /home/node/app
+WORKDIR /home/node/app/docker-cms-bundle
 COPY package.json ./
+
+COPY ecosystem.config.js ./
 
 COPY . .
 RUN rm -rf node_modules
-RUN rm -rf app/payload/node_modules
-# copyfiles needed for svelte
+# important to reinstall keystone dependencies
+RUN rm -rf apps/keystone/node_modules
 RUN npm install
+# copyfiles needed for svelte
 RUN npm install copyfiles -g
-RUN npm run build -w payload
-RUN PORT=5173 npm run build -w svelte
-
-EXPOSE 3000 5173
-
-
-FROM base as payload
-
-ENV NODE_ENV=production
-ENV PAYLOAD_CONFIG_PATH=app/payload/dist/payload.config.js
-
-WORKDIR /home/node/app
-COPY package*.json  ./
-COPY --from=builder /home/node/app/app/payload/dist ./payload/dist
-COPY --from=builder /home/node/app/app/payload/build ./payload/build
-CMD ["node", "dist/server.js"]
-
-
-FROM base as svelte
-
 ENV NODE_ENV=production
 
-WORKDIR /home/node/app
+RUN npm run build -w keystone
+RUN npm run build -w svelte
+
+FROM base as runner
+
+WORKDIR /home/node/app/docker-cms-bundle
 COPY package*.json  ./
-COPY --from=builder /home/node/app/app/svelte/build ./svelte/build
-CMD ["PORT=5173 node", "svelte/build/index.js"]
+COPY --from=builder /home/node/app/docker-cms-bundle/ecosystem.config.js .
+
+COPY --from=builder /home/node/app/docker-cms-bundle/node_modules ./node_modules
+
+COPY --from=builder /home/node/app/docker-cms-bundle/apps/keystone ./apps/keystone
+COPY --from=builder /home/node/app/docker-cms-bundle/apps/svelte/build ./apps/svelte/build
+
+EXPOSE 3000 8080
+
+ENTRYPOINT ["pm2", "--no-daemon", "start"]
+CMD ["./ecosystem.config.js"]
