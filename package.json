@@ -1,23 +1,23 @@
 {
-  "name": "docker-scratchpad",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run dev -w svelte\" \"npm run dev -w payload\" "
-  },
-  "author": "",
-  "license": "ISC",
-  "workspaces": [
-    "apps/payload",
-    "apps/svelte",
-    "apps/keystone"
-  ],
-  "devDependencies": {
-    "concurrently": "^9.0.0"
-  },
-  "dependencies": {
-    "pm2": "^5.4.2"
-  }
+    "name": "docker-scratchpad",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "concurrently \"npm run dev -w svelte\" \"npm run dev -w payload\" "
+    },
+    "author": "",
+    "license": "ISC",
+    "workspaces": [
+        "apps/payload",
+        "apps/svelte",
+        "apps/keystone"
+    ],
+    "devDependencies": {
+        "concurrently": "^9.0.0"
+    },
+    "dependencies": {
+        "pm2": "^5.4.2"
+    }
 }

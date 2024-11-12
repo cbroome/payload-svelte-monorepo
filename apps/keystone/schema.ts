@@ -71,6 +71,23 @@ export const lists = {
     fields: {
       title: text({ validation: { isRequired: true } }),
 
+      slug: text({ validation: { isRequired: true } }),
+
+      published: select({
+        type: 'string',
+        options: [
+          {
+            label: 'published',
+            value: 'true'
+          },
+          { label: 'unpublished',
+            value: 'false'
+          }
+        ],
+        validation: { isRequired: true, },
+        defaultValue: 'false'
+      }),
+
       // the document field can be used for making rich editable content
       //   you can find out more at https://keystonejs.com/docs/guides/document-fields
       content: document({
@@ -122,6 +139,11 @@ export const lists = {
           inlineConnect: true,
           inlineCreate: { fields: ['name'] },
         },
+      }),
+
+      createdAt: timestamp({
+        // this sets the timestamp to Date.now() when the user is first created
+        defaultValue: { kind: 'now' },
       }),
     },
   }),

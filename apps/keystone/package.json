@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "keystone dev",
     "start": "keystone start",
-    "build": "keystone build"
+    "build": "keystone build",
+    "build_migrations": "keystone prisma migrate dev",
+    "deploy_migrations": "keystone prisma migrate deploy"
   },
   "dependencies": {
     "@keystone-6/auth": "^8.0.0",

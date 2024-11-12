@@ -20,14 +20,20 @@ export default withAuth(
       // we're using sqlite for the fastest startup experience
       //   for more information on what database might be appropriate for you
       //   see https://keystonejs.com/docs/guides/choosing-a-database#title
-      provider: 'sqlite',
+       //provider: 'postgresql',
+      // url: 'postgresql://pguser:secret_secret_secret@keystone_postgres_db:5432'
+
+
       url: 'file:./db/keystone.db',
+      provider: 'sqlite',
+      //url: 'file:./keystone.db',
     },
     lists,
-    session,
+    session,  
     server: {
       port: 8080
     },
+    /*
     storage: {
       my_local_images: {
         kind: 'local',
@@ -49,7 +55,7 @@ export default withAuth(
         generateUrl: path => `http://localhost:8080/files${path}`,
         storagePath: '/public/keystone/files'
       },
-
     }
+      */
   })
 )

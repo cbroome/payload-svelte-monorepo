@@ -2,9 +2,6 @@ FROM node:22-alpine as base
 
 RUN npm install -g pm2
 
-
-FROM base as builder
-
 WORKDIR /home/node/app/docker-cms-bundle
 COPY package.json ./
 
@@ -14,24 +11,14 @@ COPY . .
 RUN rm -rf node_modules
 # important to reinstall keystone dependencies
 RUN rm -rf apps/keystone/node_modules
-RUN npm install
+RUN npm install --omit-dev
 # copyfiles needed for svelte
 RUN npm install copyfiles -g
 ENV NODE_ENV=production
 
 RUN npm run build -w keystone
+RUN npm run deploy_migrations -w keystone
 RUN npm run build -w svelte
-
-FROM base as runner
-
-WORKDIR /home/node/app/docker-cms-bundle
-COPY package*.json  ./
-COPY --from=builder /home/node/app/docker-cms-bundle/ecosystem.config.js .
-
-COPY --from=builder /home/node/app/docker-cms-bundle/node_modules ./node_modules
-
-COPY --from=builder /home/node/app/docker-cms-bundle/apps/keystone ./apps/keystone
-COPY --from=builder /home/node/app/docker-cms-bundle/apps/svelte/build ./apps/svelte/build
 
 EXPOSE 3000 8080
 

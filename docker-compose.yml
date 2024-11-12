@@ -11,12 +11,24 @@ services:
       - .:/home/node/app/docker-cms-bundle
       - node_modules:/home/node/app/docker-cms-bundle/node_modules
       - node_modules_keystone:/home/node/app/docker-cms-bundle/apps/keystone/node_modules
-      - keystone_db:/home/node/app/docker-cms-bundle/apps/keystone/db
       - keystone_files:/public/keystone
     working_dir: /home/node/app/docker-cms-bundle/
+    depends_on:
+      - keystone_postgres_db
+
+  keystone_postgres_db:
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - keystone_postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secret_secret_secret
+      - POSTGRES_USER=pguser
+      - POSTGRES_DB=pgdb
 
 volumes:
   node_modules:
   node_modules_keystone:
-  keystone_db:
   keystone_files:
+  keystone_postgres: {}
